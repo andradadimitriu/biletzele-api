@@ -1,0 +1,8 @@
+{
+  "body": "{\"gameName\":\"hello world\",\"creator\":\"andradaradarada@gmail.com\",\"team1\":\"Team1\", \"team2\":\"Team2\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

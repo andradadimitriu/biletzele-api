@@ -1,0 +1,3 @@
+export const IDENTIFIERS = {
+  GAME_TYPE_BILETZELE: "000001"
+};
