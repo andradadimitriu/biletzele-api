@@ -1,7 +1,5 @@
 service: biletzele-api
 # Create an optimized package for our functions
-package:
-  individually: true
 
 plugins:
   - serverless-bundle # Package our functions with Webpack
@@ -13,7 +11,7 @@ custom:
   # commands. Or fallsback to what we have set in the provider section.
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
-  tableName: ${self:custom.stage}-notes
+  tableName: biletzele
 
 provider:
   name: aws
@@ -52,6 +50,14 @@ functions:
   # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
   #     domain api call
   # - authorizer: authenticate using the AWS IAM role
+  create_game:
+    handler: create_game.main
+    events:
+      - http:
+          path: biletzele
+          method: post
+          cors: true
+          authorizer: aws_iam
   create:
     handler: create.main
     events:
