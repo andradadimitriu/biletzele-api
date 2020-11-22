@@ -1,0 +1,8 @@
+{
+  "body": "{\"gameId\":\"GHBI\",\"player\":{ \"playerId\": \"andradaradarada@gmail.com\", \"playerName\": \"Andr\"}, \"words\": [\"unu\", \"doi\", \"trei\", \"patru\", \"cinci\"]}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}
