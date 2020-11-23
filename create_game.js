@@ -21,6 +21,10 @@ export const main = handler( async(event, context) => {
       no_rounds: 4,
       rounds: [],
       status: "Pending",
+      players: {
+        ids: [],
+        playerNames: []
+      },
       teams: [{
         name: data.team1,
         members: [],
