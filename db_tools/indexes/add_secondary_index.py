@@ -7,7 +7,7 @@ try:
         TableName='biletzele',
         AttributeDefinitions=[
             {
-                "AttributeName": "status",
+                "AttributeName": "game_status",
                 "AttributeType": "S"
             },
             {
@@ -21,7 +21,7 @@ try:
                     "IndexName": "ActiveGamesIndex",
                     "KeySchema": [
                         {
-                            "AttributeName": "status",
+                            "AttributeName": "game_status",
                             "KeyType": "HASH"
                         },
                         {

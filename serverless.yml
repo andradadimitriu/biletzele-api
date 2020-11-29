@@ -66,6 +66,14 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+  get_games_by_status:
+    handler: get_games_by_status.main
+    events:
+      - http:
+          path: biletzele
+          method: post
+          cors: true
+          authorizer: aws_iam
   create:
     handler: create.main
     events:

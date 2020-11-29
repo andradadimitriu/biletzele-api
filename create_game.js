@@ -20,7 +20,7 @@ export const main = handler( async(event, context) => {
       game_type: IDENTIFIERS.GAME_TYPE_BILETZELE,
       no_rounds: 4,
       rounds: [],
-      status: "Pending",
+      game_status: "Pending",
       players: {
         ids: [],
         playerNames: []
