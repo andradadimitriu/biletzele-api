@@ -9,9 +9,10 @@ export const main = handler(async (event, context) => {
   const params = {
         TableName: process.env.tableName,
         IndexName: IDENTIFIERS.ACTIVE_GAMES_INDEX,
-        KeyConditionExpression: 'status = :status',
+        KeyConditionExpression: 'game_status = :status',
         ExpressionAttributeValues: {
             ':status': data.status
+            //TODO event.pathParameters.status
         }
   };
   const result = await dynamoDb.query(params, function(err, data) {
