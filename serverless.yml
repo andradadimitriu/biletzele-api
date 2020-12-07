@@ -54,7 +54,7 @@ functions:
     handler: create_game.main
     events:
       - http:
-          path: biletzele
+          path: biletzele/create
           method: post
           cors: true
           authorizer: aws_iam
@@ -62,7 +62,7 @@ functions:
     handler: add_player_to_game.main
     events:
       - http:
-          path: biletzele
+          path: biletzele/add
           method: post
           cors: true
           authorizer: aws_iam
@@ -70,7 +70,7 @@ functions:
     handler: get_games_by_status.main
     events:
       - http:
-          path: biletzele
+          path: biletzele/getgames
           method: post
           cors: true
           authorizer: aws_iam

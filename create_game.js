@@ -1,11 +1,11 @@
-import AWS from "aws-sdk";
 import {IDENTIFIERS} from "./libs/identifiers";
 import handler from "./libs/handler-lib";
 const ASCII_LIMITS = {start: "A".charCodeAt(), end: "Z".charCodeAt()};
 const CODE_NO_CHARS = 4;
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+import dynamoDb from "./libs/dynamodb-lib";
 
-export const main = handler( async(event, context) => {
+
+export const main = handler(async (event, context) => {
   const data = JSON.parse(event.body);
   const gameId = generateGameId();
   const params = {
@@ -14,7 +14,7 @@ export const main = handler( async(event, context) => {
       PK: `GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
       SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
       createdAt: Date.now(),
-      creator: data.creator, //event.requestContext.identity.cognitoIdentityId
+      creator: event.requestContext.identity.cognitoIdentityId,
       game_id: gameId,
       game_name: data.gameName,
       game_type: IDENTIFIERS.GAME_TYPE_BILETZELE,
@@ -38,11 +38,10 @@ export const main = handler( async(event, context) => {
       words: []
     }
   };
-  const result = await dynamoDb.put(params, function(err, data) {
-    if (err) console.log(err);
-    else console.log(`data: ${data}`);
-  });
-  console.log(`result: ${result}`);
+  await dynamoDb.put(params);
+  console.log(`params: ${JSON.stringify(params)}`);
+  console.log(`pk: GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`);
+ // console.log(`result: ${JSON.stringify(result)}`);
 });
 
 function generateGameId(){
