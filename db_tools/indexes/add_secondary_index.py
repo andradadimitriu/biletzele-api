@@ -1,13 +1,15 @@
 import boto3
+import sys
 
 dynamodb = boto3.client('dynamodb')
 
 try:
     dynamodb.update_table(
-        TableName='biletzele',
+        TableName='{env}{dash}biletzele'.format(env = sys.argv[0] if len(sys.argv) > 0 else "",
+                                                dash = "-" if len(sys.argv) > 0 else "" ),
         AttributeDefinitions=[
             {
-                "AttributeName": "game_status",
+                "AttributeName": "gameStatus",
                 "AttributeType": "S"
             },
             {
@@ -21,7 +23,7 @@ try:
                     "IndexName": "ActiveGamesIndex",
                     "KeySchema": [
                         {
-                            "AttributeName": "game_status",
+                            "AttributeName": "gameStatus",
                             "KeyType": "HASH"
                         },
                         {

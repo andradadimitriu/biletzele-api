@@ -15,12 +15,12 @@ export const main = handler(async (event, context) => {
       SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
       createdAt: Date.now(),
       creator: event.requestContext.identity.cognitoIdentityId,
-      game_id: gameId,
-      game_name: data.gameName,
-      game_type: IDENTIFIERS.GAME_TYPE_BILETZELE,
-      no_rounds: 4,
+      gameId: gameId,
+      gameName: data.gameName,
+      gameType: IDENTIFIERS.GAME_TYPE_BILETZELE,
+      noRounds: 4,
       rounds: [],
-      game_status: "Pending",
+      gameStatus: "Pending",
       players: {
         ids: [],
         playerNames: []
@@ -40,8 +40,7 @@ export const main = handler(async (event, context) => {
   };
   await dynamoDb.put(params);
   console.log(`params: ${JSON.stringify(params)}`);
-  console.log(`pk: GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`);
- // console.log(`result: ${JSON.stringify(result)}`);
+  return gameId;
 });
 
 function generateGameId(){

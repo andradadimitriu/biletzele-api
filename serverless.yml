@@ -42,7 +42,11 @@ provider:
       # the specific table for the stage
       Resource:
         - "Fn::GetAtt": [ BiletzeleTable, Arn ]
-
+        - Fn::Join:
+            - "/"
+            -
+              - { "Fn::GetAtt": [ BiletzeleTable, Arn ] }
+              - "index/*"
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
   # - path: url path is /notes
@@ -70,62 +74,20 @@ functions:
     handler: get_games_by_status.main
     events:
       - http:
-          path: biletzele/getgames
-          method: post
-          cors: true
-          authorizer: aws_iam
-  create:
-    handler: create.main
-    events:
-      - http:
-          path: notes
-          method: post
-          cors: true
-          authorizer: aws_iam
-  list:
-    # Defines an HTTP API endpoint that calls the main function in list.js
-    # - path: url path is /notes
-    # - method: GET request
-    handler: list.main
-    events:
-      - http:
-          path: notes
+          path: biletzele/getgames/{status}
           method: get
           cors: true
           authorizer: aws_iam
-  update:
-    # Defines an HTTP API endpoint that calls the main function in update.js
-    # - path: url path is /notes/{id}
-    # - method: PUT request
-    handler: update.main
+  get_game:
+    handler: get_game.main
     events:
       - http:
-          path: notes/{id}
-          method: put
-          cors: true
-          authorizer: aws_iam
-  delete:
-    # Defines an HTTP API endpoint that calls the main function in delete.js
-    # - path: url path is /notes/{id}
-    # - method: DELETE request
-    handler: delete.main
-    events:
-      - http:
-          path: notes/{id}
-          method: delete
-          cors: true
-          authorizer: aws_iam
-  get:
-    # Defines an HTTP API endpoint that calls the main function in get.js
-    # - path: url path is /notes/{id}
-    # - method: GET request
-    handler: get.main
-    events:
-      - http:
-          path: notes/{id}
+          path: biletzele/getgame/{id}
           method: get
           cors: true
           authorizer: aws_iam
+
+
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors

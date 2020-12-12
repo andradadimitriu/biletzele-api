@@ -1,6 +1,5 @@
-import AWS from "aws-sdk";
 import {IDENTIFIERS} from "./libs/identifiers";
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
 
 export const main = handler(async (event, context) => {
