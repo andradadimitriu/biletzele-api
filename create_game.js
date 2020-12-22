@@ -6,6 +6,7 @@ import dynamoDb from "./libs/dynamodb-lib";
 
 
 export const main = handler(async (event, context) => {
+  console.log(`cognito-info:${JSON.stringify(event)}`);
   const data = JSON.parse(event.body);
   const gameId = generateGameId();
   const params = {
@@ -25,15 +26,15 @@ export const main = handler(async (event, context) => {
         ids: [],
         playerNames: []
       },
-      teams: [{
-        name: data.team1,
-        members: [],
-        score: 0
-      }, {
-        name: data.team2,
-        members: [],
-        score: 0
-      }],
+      teams: {
+        [data.team1Name]: {
+          members: [],
+          score: 0
+        },
+        [data.team2Name]: {
+          members: [],
+          score: 0
+      }},
       turnNumber: 0,
       words: []
     }

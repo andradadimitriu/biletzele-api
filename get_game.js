@@ -13,8 +13,8 @@ export const main = handler(async (event, context) => {
 
   const result = await dynamoDb.get(params);
   if ( ! result.Item) {
-        throw new Error("Something went wrong. No game found with the specified id.");
+        return {gameExists: false};
   }
-  return result.Item;
+  return {gameExists: true, ...result.Item};
 }
 );

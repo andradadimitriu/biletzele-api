@@ -8,10 +8,11 @@ export const main = handler(async (event, context) => {
   const params = {
         TableName: process.env.tableName,
         Key: { PK:`GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${data.gameId}`, SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${data.gameId}`},
-        UpdateExpression: 'SET teams[0].members = list_append (teams[0].members, :player), ' +
+        UpdateExpression: 'SET teams.#teamName.members = list_append (teams.#teamName.members, :player), ' +
             'players.ids = list_append(players.ids, :playerIdList), ' +
             'players.playerNames = list_append(players.playerNames, :playerNameList), ' +
             'words = list_append(words, :words)',
+        ExpressionAttributeNames:  {"#teamName": data.teamName},
         ExpressionAttributeValues: {
             ':player': [data.player],
             ':playerId': data.player.playerId, //TODO see if you actually need two vars for two dif types(list & str)
@@ -23,11 +24,8 @@ export const main = handler(async (event, context) => {
         ConditionExpression: "not (contains(players.ids, :playerId) OR contains(player.playerNames, :playerName))",
         ReturnValues:"UPDATED_NEW"
   };
-  const result = await dynamoDb.update(params, function(err, data) {
-  if (err) console.log(err);
-  else console.log(data);
-});
-  console.log("result");
-  console.log(result);
+  const result = await dynamoDb.update(params);
+  console.log(`result: ${JSON.stringify(result)}`);
+  return result;
 }
 );

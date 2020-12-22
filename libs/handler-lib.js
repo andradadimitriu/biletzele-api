@@ -1,3 +1,6 @@
+const ERROR_CODES = {
+  ConditionalCheckFailedException: 520
+};
 export default function handler(lambda) {
   return function (event, context) {
     return Promise.resolve()
@@ -7,7 +10,8 @@ export default function handler(lambda) {
       .then((responseBody) => [200, responseBody])
       // On failure
       .catch((e) => {
-        return [500, { error: e.message }];
+        console.log(`error:${JSON.stringify(e)}`);
+        return [ERROR_CODES[e.name] || 500, { error: e.message }];
       })
       // Return HTTP response
       .then(([statusCode, body]) => ({

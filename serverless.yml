@@ -66,7 +66,7 @@ functions:
     handler: add_player_to_game.main
     events:
       - http:
-          path: biletzele/add
+          path: biletzele/addplayer
           method: post
           cors: true
           authorizer: aws_iam
