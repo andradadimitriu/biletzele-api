@@ -86,6 +86,30 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+  start_game:
+    handler: start_game.main
+    events:
+      - http:
+          path: biletzele/startgame/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
+  new_round:
+    handler: new_round.main
+    events:
+      - http:
+          path: biletzele/newround/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
+  update_round:
+    handler: update_round.main
+    events:
+      - http:
+          path: biletzele/updateround/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
 
 
 # Create our resources with separate CloudFormation templates
