@@ -5,5 +5,6 @@ export const GAME_STATUSES = {
 
 export const ROUND_STATUSES = {
     ENDED: "Ended",
-    ACTIVE: "Active"
+    ACTIVE: "Active",
+    PENDING: "Pending"
 };
