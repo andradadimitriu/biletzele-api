@@ -2,10 +2,11 @@ import {IDENTIFIERS} from "./libs/identifiers";
 import handler from "./libs/handler-lib";
 const ASCII_LIMITS = {start: "A".charCodeAt(), end: "Z".charCodeAt()};
 const CODE_NO_CHARS = 4;
+const ROUND_NO = 4;
 import dynamoDb from "./libs/dynamodb-lib";
 import {GAME_STATUSES} from "./utils/statuses";
 
-export const main = handler(async (event, context) => {
+export const main = handler(async (event) => {
   console.log(`cognito-info:${JSON.stringify(event)}`);
   const data = JSON.parse(event.body);
   const gameId = generateGameId();
@@ -20,7 +21,10 @@ export const main = handler(async (event, context) => {
       gameName: data.gameName,
       gameType: IDENTIFIERS.GAME_TYPE_BILETZELE,
       noRounds: 4,
-      rounds: [],
+      rounds: Array.from({length: ROUND_NO}, (_, index) => ({
+        roundNo: index + 1,
+        roundStatus: GAME_STATUSES.PENDING
+      })),
       gameStatus: GAME_STATUSES.PENDING,
       players: {
         ids: [],

@@ -102,11 +102,35 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-  update_round:
-    handler: update_round.main
+  end_round:
+    handler: end_round.main
     events:
       - http:
-          path: biletzele/updateround/{id}
+          path: biletzele/endround/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
+  new_turn:
+    handler: new_turn.main
+    events:
+      - http:
+          path: biletzele/newturn/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
+  end_turn:
+    handler: end_turn.main
+    events:
+      - http:
+          path: biletzele/endturn/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
+  word_to_guess:
+    handler: end_turn.main
+    events:
+      - http:
+          path: biletzele/wordtoguess/{id}
           method: post
           cors: true
           authorizer: aws_iam

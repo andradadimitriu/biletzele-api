@@ -1,8 +1,7 @@
 import {IDENTIFIERS} from "./libs/identifiers";
 import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
-import {ROUND_STATUSES} from "./utils/statuses";
-export const main = handler(async (event, context) => {
+export const main = handler(async (event) => {
     const data = JSON.parse(event.body);
 
     const params = {

@@ -1,8 +1,8 @@
 import {IDENTIFIERS} from "./libs/identifiers";
 import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
-import {ROUND_STATUSES} from "./utils/statuses";
-export const main = handler(async (event, context) => {
+import {GAME_STATUSES} from "./utils/statuses";
+export const main = handler(async (event) => {
     const data = JSON.parse(event.body);
     const endRound = data.wordsLeft && data.wordsLeft.length === 0;
     const endRoundAttributeValue = endRound ? {':endRoundStatus': ROUND_STATUSES.ENDED}: {};
@@ -14,7 +14,7 @@ export const main = handler(async (event, context) => {
             ExpressionAttributeValues: {
                 ':wordsLeft': data.wordsLeft,
                 ':roundNo': data.roundNo,
-                ':roundStatus': ROUND_STATUSES.ACTIVE,
+                ':roundStatus': GAME_STATUSES.ACTIVE,
                 ':increment' : 1,
                 ...endRoundAttributeValue
             },
