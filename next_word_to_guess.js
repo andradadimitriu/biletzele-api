@@ -1,18 +1,21 @@
 import {IDENTIFIERS} from "./libs/identifiers";
 import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
+
 export const main = handler(async (event) => {
     const data = JSON.parse(event.body);
+    console.log(`data: ${JSON.stringify(data)}`);
     const params = {
             TableName: process.env.tableName,
             Key: { PK:`GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`, SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`},
-            UpdateExpression: 'REMOVE rounds[:roundIndex].wordsLeft[turn.wordIndex] SET turn.wordIndex =:newWordIndex, turnNumber = turnNumber + 1, turn.turnNo = turn.turnNo + 1',
+            UpdateExpression: `REMOVE rounds[${data.roundNo - 1}].wordsLeft[${data.oldWordIndex}] SET rounds[${data.roundNo - 1}].score.${data.teamTurn} =  rounds[${data.roundNo - 1}].score.${data.teamTurn} + :increment, turn.wordIndex =:newWordIndex`,
             ExpressionAttributeValues: {
-                ':prevTurnNo': data.turnNo,
-                ':newWordIndex': data.wordIndex,
-                ':roundIndex': data.roundNo - 1
+                ':turnNo': data.turnNo,
+                ':newWordIndex': data.newWordIndex,
+                ':oldWordIndex': data.oldWordIndex,
+                ':increment': 1
             },
-            ConditionExpression: 'turnNumber = :prevTurnNo AND turnNumber = turn.turnNumber',
+            ConditionExpression: 'turnNumber = :turnNo AND turnNumber = turn.turnNo AND turn.wordIndex = :oldWordIndex',
         ReturnValues:"UPDATED_NEW"
         };
         const result = await dynamoDb.update(params);

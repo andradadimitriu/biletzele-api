@@ -3,7 +3,7 @@ import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
 export const main = handler(async (event) => {
     const data = JSON.parse(event.body);
-
+    console.log(`turnNo: ${data.turnNo}`);
     const params = {
             TableName: process.env.tableName,
             Key: { PK:`GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`, SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`},

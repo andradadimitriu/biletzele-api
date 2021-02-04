@@ -4,7 +4,7 @@ const ASCII_LIMITS = {start: "A".charCodeAt(), end: "Z".charCodeAt()};
 const CODE_NO_CHARS = 4;
 const ROUND_NO = 4;
 import dynamoDb from "./libs/dynamodb-lib";
-import {GAME_STATUSES} from "./utils/statuses";
+import {GAME_STATUS} from "./utils/statuses";
 
 export const main = handler(async (event) => {
   console.log(`cognito-info:${JSON.stringify(event)}`);
@@ -23,22 +23,24 @@ export const main = handler(async (event) => {
       noRounds: 4,
       rounds: Array.from({length: ROUND_NO}, (_, index) => ({
         roundNo: index + 1,
-        roundStatus: GAME_STATUSES.PENDING
+        roundStatus: GAME_STATUS.PENDING,
+        score:{
+          [data.team1Name]: 0,
+          [data.team2Name]: 0
+        }
       })),
-      gameStatus: GAME_STATUSES.PENDING,
+      gameStatus: GAME_STATUS.PENDING,
       players: {
         ids: [],
         playerNames: []
       },
       teams: {
         [data.team1Name]: {
-          members: [],
-          score: 0
+          members: []
         },
         [data.team2Name]: {
-          members: [],
-          score: 0
-      }},
+          members: []
+        }},
       turnNumber: 0,
       words: []
     }

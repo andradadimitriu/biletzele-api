@@ -8,19 +8,20 @@ export const main = handler(async (event) => {
         startTime: data.startTime,
         wordIndex: data.wordIndex
     };
+    console.log(`turn: ${turn}`);
     const params = {
             TableName: process.env.tableName,
             Key: { PK:`GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`, SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`},
             UpdateExpression: 'SET turn =:turn',
             ExpressionAttributeValues: {
                 ':turn': turn,
-                ':turnNo': ":turnNo"
+                ':turnNo': data.turnNo
             },
             ConditionExpression: "turnNumber = :turnNo",
         ReturnValues:"UPDATED_NEW"
         };
         const result = await dynamoDb.update(params);
         console.log(`result: ${JSON.stringify(result)}`);
-        return result;
+        return turn;
     }
 );

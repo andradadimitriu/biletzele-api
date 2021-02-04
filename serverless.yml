@@ -126,11 +126,19 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-  word_to_guess:
-    handler: end_turn.main
+  next_word_to_guess:
+    handler: next_word_to_guess.main
     events:
       - http:
           path: biletzele/wordtoguess/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
+  end_game:
+    handler: end_game.main
+    events:
+      - http:
+          path: biletzele/endgame/{id}
           method: post
           cors: true
           authorizer: aws_iam

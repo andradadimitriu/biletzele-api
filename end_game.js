@@ -7,16 +7,15 @@ export const main = handler(async (event) => {
     const params = {
             TableName: process.env.tableName,
             Key: { PK:`GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`, SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`},
-            UpdateExpression: `SET rounds[${data.roundNo - 1}].roundStatus = :endRoundStatus, turnNumber = turnNumber + :increment REMOVE rounds[${data.roundNo - 1}].wordsLeft, turn`,
+            UpdateExpression: `SET rounds[${data.roundNo - 1}].roundStatus = :endStatus, gameStatus = :endStatus REMOVE rounds[${data.roundNo - 1}].wordsLeft, turn`,
             ExpressionAttributeValues: {
                 ':turnNo': data.turnNo,
                 ':roundNo': data.roundNo,
                 ':roundStatus': GAME_STATUS.ACTIVE,
-                ':increment' : 1,
                 ':zero': 0,
-                ':endRoundStatus': GAME_STATUS.ENDED
+                ':endStatus': GAME_STATUS.ENDED
             },
-            ConditionExpression: `rounds[${data.roundNo - 1}].roundNo = :roundNo AND rounds[${data.roundNo - 1}].roundStatus = :roundStatus AND size(rounds[${data.roundNo - 1}].wordsLeft) = :zero AND turnNumber = :turnNo`,
+            ConditionExpression: `noRounds = :roundNo AND rounds[${data.roundNo - 1}].roundNo = :roundNo AND rounds[${data.roundNo - 1}].roundStatus = :roundStatus AND size(rounds[${data.roundNo - 1}].wordsLeft) = :zero AND turnNumber = :turnNo`,
             ReturnValues:"UPDATED_NEW"
         };
     const result = await dynamoDb.update(params);

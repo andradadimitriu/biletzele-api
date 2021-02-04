@@ -1,6 +1,7 @@
 import {IDENTIFIERS} from "./libs/identifiers";
 import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
+import {GAME_STATUS} from "./utils/statuses";
 
 export const main = handler(async (event, context) => {
 
@@ -19,9 +20,10 @@ export const main = handler(async (event, context) => {
             ':playerName': data.player.playerName,
             ':playerIdList': [data.player.playerId],
             ':playerNameList': [data.player.playerName],
+            ':gameStatus': GAME_STATUS.PENDING,
             ':words': data.words
             },
-        ConditionExpression: "not (contains(players.ids, :playerId) OR contains(player.playerNames, :playerName))",
+        ConditionExpression: "gameStatus =:gameStatus AND not (contains(players.ids, :playerId) OR contains(player.playerNames, :playerName))",
         ReturnValues:"UPDATED_NEW"
   };
   const result = await dynamoDb.update(params);

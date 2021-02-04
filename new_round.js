@@ -1,7 +1,7 @@
 import {IDENTIFIERS} from "./libs/identifiers";
 import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
-import {GAME_STATUSES} from "./utils/statuses";
+import {GAME_STATUS} from "./utils/statuses";
 export const main = handler(async (event) => {
     const data = JSON.parse(event.body);
     console.log(`roundNo: ${data.roundNo}`);
@@ -10,15 +10,13 @@ export const main = handler(async (event) => {
     const params = {
             TableName: process.env.tableName,
             Key: { PK:`GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`, SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${event.pathParameters.id}`},
-            UpdateExpression: 'SET rounds[:roundIndex].roundStatus = :newRoundStatus, rounds[:roundIndex].wordsLeft = words',
+            UpdateExpression: `SET rounds[${data.roundNo - 1}].roundStatus = :newRoundStatus, rounds[${data.roundNo - 1}].wordsLeft = words`,
             ExpressionAttributeValues: {
                 ':roundNo': data.roundNo,
-                ':roundIndex': data.roundNo - 1,
-                ':prevRoundStatus': GAME_STATUSES.ENDED,
-                ':newRoundStatus': GAME_STATUSES.ACTIVE,
-                ':zero': 0
+                ':prevRoundStatus': GAME_STATUS.ENDED,
+                ':newRoundStatus': GAME_STATUS.ACTIVE
             },
-            ConditionExpression: `noRounds >= :roundNo AND size(rounds[${data.roundNo - 2}].wordsLeft) = :zero AND rounds[${data.roundNo - 2}].roundStatus = :prevRoundStatus`,
+            ConditionExpression: `noRounds >= :roundNo AND rounds[${data.roundNo - 2}].roundStatus = :prevRoundStatus`,
         ReturnValues:"UPDATED_NEW"
         };
         const result = await dynamoDb.update(params);
