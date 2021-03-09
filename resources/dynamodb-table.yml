@@ -10,6 +10,8 @@ Resources:
           AttributeType: S
         - AttributeName: gameStatus
           AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: N
       KeySchema:
         - AttributeName: PK
           KeyType: HASH
@@ -20,7 +22,7 @@ Resources:
           KeySchema:
             - AttributeName: gameStatus
               KeyType: HASH
-            - AttributeName: PK
+            - AttributeName: createdAt
               KeyType: RANGE
           Projection:
             ProjectionType: ALL

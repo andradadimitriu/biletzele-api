@@ -142,6 +142,14 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+  delete_game:
+    handler: delete_game.main
+    events:
+      - http:
+          path: biletzele/deleteone/{id}
+          method: post
+          cors: true
+          authorizer: aws_iam
 
 
 # Create our resources with separate CloudFormation templates
