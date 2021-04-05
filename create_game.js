@@ -45,21 +45,12 @@ export const main = handler(async (event) => {
                     }
                 },
                 turnNumber: 0,
-                words: []
+                words: [],
+                connectionIds: []
             }
         }
-    },
-        {
-            Put: {
-                TableName: process.env.tableName,
-                Item: {
-                    PK: `GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}#CONNECTIONS`,
-                    SK: `#CONNECTIONS`,
-                    connectionIds: []
-                }
-            }
-        }];
-    await dynamoDb.transactWrite(params);
+    }];
+    await dynamoDb.put(params);
     console.log(`params: ${JSON.stringify(params)}`);
     return gameId;
 });

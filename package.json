@@ -19,7 +19,6 @@
     "serverless-offline": "^5.3.3"
   },
   "dependencies": {
-    "serverless-websockets-plugin": "^1.0.0",
     "uuid": "^7.0.3"
   }
 }

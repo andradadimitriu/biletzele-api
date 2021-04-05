@@ -5,7 +5,6 @@ plugins:
   - serverless-bundle # Package our functions with Webpack
   - serverless-offline
   - serverless-dotenv-plugin # Load .env as environment variables
-  - serverless-websockets-plugin
 
 custom:
   # Our stage is based on what is passed in when running serverless
@@ -67,11 +66,8 @@ functions:
   add_player_to_game:
     handler: add_player_to_game.main
     events:
-      - http:
-          path: biletzele/addplayer
-          method: post
-          cors: true
-          authorizer: aws_iam
+      - websocket:
+          route: addplayer
   get_games_by_status:
     handler: get_games_by_status.main
     events:
