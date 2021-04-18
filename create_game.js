@@ -11,45 +11,43 @@ export const main = handler(async (event) => {
     console.log(`cognito-info:${JSON.stringify(event)}`);
     const data = JSON.parse(event.body);
     const gameId = generateGameId();
-    const params = [{
-        Put: {
-            TableName: process.env.tableName,
-            Item: {
-                PK: `GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
-                SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
-                createdAt: Date.now(),
-                creator: event.requestContext.identity.cognitoIdentityId,
-                gameId: gameId,
-                gameName: data.gameName,
-                gameType: IDENTIFIERS.GAME_TYPE_BILETZELE,
-                noRounds: 4,
-                rounds: Array.from({length: ROUND_NO}, (_, index) => ({
-                    roundNo: index + 1,
-                    roundStatus: GAME_STATUS.PENDING,
-                    score: {
-                        [data.team1Name]: 0,
-                        [data.team2Name]: 0
-                    }
-                })),
-                gameStatus: GAME_STATUS.PENDING,
-                players: {
-                    ids: [],
-                    playerNames: []
+    const params = {
+        TableName: process.env.tableName,
+        Item: {
+            PK: `GAME#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
+            SK: `#METADATA#${IDENTIFIERS.GAME_TYPE_BILETZELE}#${gameId}`,
+            createdAt: Date.now(),
+            creator: event.requestContext.identity.cognitoIdentityId,
+            gameId: gameId,
+            gameName: data.gameName,
+            gameType: IDENTIFIERS.GAME_TYPE_BILETZELE,
+            noRounds: 4,
+            rounds: Array.from({length: ROUND_NO}, (_, index) => ({
+                roundNo: index + 1,
+                roundStatus: GAME_STATUS.PENDING,
+                score: {
+                    [data.team1Name]: 0,
+                    [data.team2Name]: 0
+                }
+            })),
+            gameStatus: GAME_STATUS.PENDING,
+            players: {
+                ids: [],
+                playerNames: []
+            },
+            teams: {
+                [data.team1Name]: {
+                    members: []
                 },
-                teams: {
-                    [data.team1Name]: {
-                        members: []
-                    },
-                    [data.team2Name]: {
-                        members: []
-                    }
-                },
-                turnNumber: 0,
-                words: [],
-                connectionIds: []
-            }
+                [data.team2Name]: {
+                    members: []
+                }
+            },
+            turnNumber: 0,
+            words: [],
+            connectionIds: dynamoDb.createSet([""])//dummy connection
         }
-    }];
+    };
     await dynamoDb.put(params);
     console.log(`params: ${JSON.stringify(params)}`);
     return gameId;

@@ -63,11 +63,14 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-  add_player_to_game:
-    handler: add_player_to_game.main
-    events:
-      - websocket:
-          route: addplayer
+#  add_player_to_game:
+#    handler: add_player_to_game.main
+#    events:
+#      - http:
+#          path: biletzele/addplayer
+#          method: post
+#          cors: true
+#          authorizer: aws_iam
   get_games_by_status:
     handler: get_games_by_status.main
     events:
@@ -158,12 +161,21 @@ functions:
     events:
       - websocket:
           route: $disconnect
-  broadcast:
-    handler: connection.broadcastHandler
+#  broadcast:
+#    handler: connection.broadcast
+#    events:
+#      - websocket:
+#          route: broadcast
+  enterRoom:
+    handler: connection.enterRoom
     events:
       - websocket:
-          route: broadcast
-
+          route: enterroom
+  add_player_to_game:
+    handler: add_player_to_game.main
+    events:
+      - websocket:
+          route: addplayer
 
 # Create our resources with separate CloudFormation templates
 resources:
