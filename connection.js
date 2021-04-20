@@ -37,14 +37,14 @@ export const disconnectHandler = handler(async () => {
     }
 );
 
-export async function broadcast(event, gameId, connectionIds){
+export async function broadcast(event, gameId, connectionIds, dataToSend){
     const endpoint =
         event.requestContext.domainName + '/' + event.requestContext.stage;
     const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29', //TODO check which date ,
         endpoint: endpoint
     });
-    const connectionsToDelete = await sendToClients(apigwManagementApi, connectionIds);
+    const connectionsToDelete = await sendToClients(apigwManagementApi, connectionIds, dataToSend);
     await deleteStaleConnections(gameId, connectionsToDelete);
     return { statusCode: 200, body: 'Data sent.' };
 }
@@ -62,7 +62,7 @@ async function deleteStaleConnections(gameId, connectionsToDelete){
     return await dynamoDb.update(params);
 }
 
-async function sendToClients(apigwManagementApi, connectionIds){
+async function sendToClients(apigwManagementApi, connectionIds, dataToSend){
     console.log(`connectionIds: ${JSON.stringify(connectionIds)}`);
 
     const connectionsToDelete = [];
@@ -73,7 +73,7 @@ async function sendToClients(apigwManagementApi, connectionIds){
             continue;
         }
         try {
-            await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: "postData" }).promise();
+            await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(dataToSend) }).promise();
             console.log(`successfully notified: ${connectionId}`);
         } catch (e) {
             if (e.statusCode === 410) {

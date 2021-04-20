@@ -3,6 +3,7 @@ import dynamoDb from "./libs/dynamodb-lib";
 import handler from "./libs/handler-lib";
 import {GAME_STATUS} from "./utils/statuses";
 import {broadcast} from"./connection";
+import {MESSAGE_TYPE} from "./utils/messageTypes";
 export const main = handler(async (event) => {
 
   const data = JSON.parse(event.body).data;
@@ -29,8 +30,9 @@ export const main = handler(async (event) => {
   const result = await dynamoDb.update(params);
   console.log(`result: ${JSON.stringify(result)}`);
   if(result && result.Attributes) {
+      const dataToSend = {type: MESSAGE_TYPE.NEW_PLAYER, game: result.Attributes};
       console.log("Broadcast change to users");
-      await broadcast(event, data.gameId, result.Attributes.connectionIds);
+      await broadcast(event, data.gameId, result.Attributes.connectionIds, dataToSend);
   }
   return result;
 }

@@ -2,7 +2,7 @@ import handler from "./libs/handler-lib";
 import dynamoDb from "./libs/dynamodb-lib";
 import {IDENTIFIERS} from "./libs/identifiers";
 
-export const main = handler(async (event, context) => {
+export const main = handler(async (event) => {
   const params = {
       TableName: process.env.tableName,
       Key: {
@@ -13,8 +13,8 @@ export const main = handler(async (event, context) => {
 
   const result = await dynamoDb.get(params);
   if ( ! result.Item) {
-        return {gameExists: false};
+        return {gameNotFound: true};
   }
-  return {gameExists: true, ...result.Item};
+  return result.Item;
 }
 );
