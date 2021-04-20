@@ -66,15 +66,14 @@ async function sendToClients(apigwManagementApi, connectionIds, dataToSend){
     console.log(`connectionIds: ${JSON.stringify(connectionIds)}`);
 
     const connectionsToDelete = [];
+    if( connectionIds.values[0].length < 1 ){
+        connectionIds.values.shift();
 
-    for(const connectionId of connectionIds.values){
-        if(!connectionId || connectionId.length < 1){
-            connectionsToDelete.push(connectionId);
-            continue;
-        }
+    }
+    const postRequests = connectionIds.values.map(async (connectionId) => {
         try {
-            await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(dataToSend) }).promise();
-            console.log(`successfully notified: ${connectionId}`);
+            console.log(`notifying ${connectionId}`);
+            return await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(dataToSend) }).promise();
         } catch (e) {
             if (e.statusCode === 410) {
                 console.log(`Found stale connection: ${connectionId}`);
@@ -85,13 +84,11 @@ async function sendToClients(apigwManagementApi, connectionIds, dataToSend){
                 throw e;
             }
         }
-    }
-    //TODO can you fire all promises at once
+    });
 
-    // await Promise.all(postCalls);
     //TODO is try catch needed?
     // try {
-    //     await Promise.all(postCalls);
+    await Promise.all(postRequests);
     // } catch (e) {
     //     return { statusCode: 500, body: e.stack };
     // }

@@ -119,14 +119,6 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-  end_turn:
-    handler: end_turn.main
-    events:
-      - http:
-          path: biletzele/endturn/{id}
-          method: post
-          cors: true
-          authorizer: aws_iam
   next_word_to_guess:
     handler: next_word_to_guess.main
     events:
@@ -176,6 +168,11 @@ functions:
     events:
       - websocket:
           route: addplayer
+  end_turn:
+    handler: end_turn.main
+    events:
+      - websocket:
+          route: endturn
 
 # Create our resources with separate CloudFormation templates
 resources:
