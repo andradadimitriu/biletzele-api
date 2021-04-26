@@ -37,6 +37,14 @@ export const disconnectHandler = handler(async () => {
     }
 );
 
+export async function gameBroadcast(event, gameId, result, dataType){
+    if(result && result.Attributes) {
+        const dataToSend = {type: dataType, game: result.Attributes};
+        console.log("Broadcast change to users");
+        await broadcast(event, gameId, result.Attributes.connectionIds, dataToSend);
+    }
+}
+
 export async function broadcast(event, gameId, connectionIds, dataToSend){
     const endpoint =
         event.requestContext.domainName + '/' + event.requestContext.stage;

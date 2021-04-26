@@ -95,22 +95,6 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-  new_round:
-    handler: new_round.main
-    events:
-      - http:
-          path: biletzele/newround/{id}
-          method: post
-          cors: true
-          authorizer: aws_iam
-  end_round:
-    handler: end_round.main
-    events:
-      - http:
-          path: biletzele/endround/{id}
-          method: post
-          cors: true
-          authorizer: aws_iam
   new_turn:
     handler: new_turn.main
     events:
@@ -124,14 +108,6 @@ functions:
     events:
       - http:
           path: biletzele/wordtoguess/{id}
-          method: post
-          cors: true
-          authorizer: aws_iam
-  end_game:
-    handler: end_game.main
-    events:
-      - http:
-          path: biletzele/endgame/{id}
           method: post
           cors: true
           authorizer: aws_iam
@@ -173,6 +149,21 @@ functions:
     events:
       - websocket:
           route: endturn
+  end_round:
+    handler: end_round.main
+    events:
+      - websocket:
+          route: endround
+  end_game:
+    handler: end_game.main
+    events:
+      - websocket:
+          route: endgame
+  new_round:
+    handler: new_round.main
+    events:
+      - websocket:
+          route: newround
 
 # Create our resources with separate CloudFormation templates
 resources:
