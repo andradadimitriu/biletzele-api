@@ -9,7 +9,8 @@ export const main = handler(async (event, context) => {
         KeyConditionExpression: 'gameStatus = :status',
         ExpressionAttributeValues: {
             ':status': event.pathParameters.status
-        }
+        },
+        ScanIndexForward: false
   };
   const result = await dynamoDb.query(params, function(err, data) {
       if (err) console.log(err);
