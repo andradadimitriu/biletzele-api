@@ -53,18 +53,19 @@ const expectedGameParams = {
 };
 
 jest.mock('aws-sdk', () => {
-    const mDocumentClient = { get: jest.fn() };
+    const mDocumentClient = { put: jest.fn(), createSet: jest.fn((list)=>new Set(list)) };
     const mDynamoDB = { DocumentClient: jest.fn(() => mDocumentClient) };
     return { DynamoDB: mDynamoDB };
 });
 const mDynamoDb = new aws.DynamoDB.DocumentClient();
 
-describe('64564233', () => {
+describe('create game', () => {
     afterAll(() => {
         jest.resetAllMocks();
     });
     it('successfully create', async () => {
-        mDynamoDb.get.mockImplementationOnce((_, callback) => callback(null, null));
+        // mDynamoDb.get.mockImplementationOnce((_, callback) => callback(null, null));
+        mDynamoDb.put.mockImplementationOnce((_, callback) => callback(null, null));
         await main(event1);
         expect(mDynamoDb.put).toHaveBeenCalledTimes(1);
 
