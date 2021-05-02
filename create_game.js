@@ -11,6 +11,7 @@ export const main = handler(async (event) => {
     console.log(`cognito-info:${JSON.stringify(event)}`);
     const data = JSON.parse(event.body);
     const gameId = generateGameId();
+    console.log(`gameId:${gameId}`);
     const params = {
         TableName: process.env.tableName,
         Item: {
@@ -48,6 +49,7 @@ export const main = handler(async (event) => {
             connectionIds: dynamoDb.createSet([""])//dummy connection
         }
     };
+    console.log(`params:${params}`);
     await dynamoDb.put(params);
     console.log(`params: ${JSON.stringify(params)}`);
     return gameId;
