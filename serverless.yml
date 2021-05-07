@@ -50,7 +50,7 @@ provider:
               - "index/*"
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
-  # - path: url path is /notes
+  # - path: url
   # - method: POST request
   # - cors: enabled CORS (Cross-Origin Resource Sharing) for browser cross
   #     domain api call
@@ -63,14 +63,6 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-#  add_player_to_game:
-#    handler: add_player_to_game.main
-#    events:
-#      - http:
-#          path: biletzele/addplayer
-#          method: post
-#          cors: true
-#          authorizer: aws_iam
   get_games_by_status:
     handler: get_games_by_status.main
     events:
@@ -129,11 +121,6 @@ functions:
     events:
       - websocket:
           route: $disconnect
-#  broadcast:
-#    handler: connection.broadcast
-#    events:
-#      - websocket:
-#          route: broadcast
   enterRoom:
     handler: connection.enterRoom
     events:

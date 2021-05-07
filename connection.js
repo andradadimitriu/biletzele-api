@@ -17,7 +17,7 @@ export const enterRoom = handler(async (event) => {
                 ':connectionSet': dynamoDb.createSet([connectionId]),
                 ':connectionId': connectionId,
             },
-            ConditionExpression: "not gameStatus =:endedGameStatus AND not contains(connectionIds, :connectionId)",
+            ConditionExpression: "attribute_exists(gameId) AND not gameStatus =:endedGameStatus AND not contains(connectionIds, :connectionId)",
             ReturnValues:"UPDATED_NEW"
         };
     const result = await dynamoDb.update(params);
