@@ -22,8 +22,6 @@ export const main = handler(async (event) => {
         ReturnValues:"ALL_NEW"
     };
 
-    const result = await dynamoDb.update(params);
-    await gameBroadcast(event, data.gameId, result, MESSAGE_TYPE.NEW_ROUND);
-    console.log(`result: ${JSON.stringify(result)}`);
-    return result;
+    const dynamoDbCall = async () => await dynamoDb.update(params);
+    await gameBroadcast(event, data.gameId, dynamoDbCall, MESSAGE_TYPE.NEW_ROUND);
 });

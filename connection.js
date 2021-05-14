@@ -3,6 +3,7 @@ import dynamoDb from "./libs/dynamodb-lib";
 import {IDENTIFIERS} from "./libs/identifiers";
 import AWS from "aws-sdk";
 import {GAME_STATUS} from "./utils/statuses";
+import {MESSAGE_TYPE} from "./utils/messageTypes";
 
 export const enterRoom = handler(async (event) => {
     const connectionId = event.requestContext.connectionId;
@@ -37,26 +38,56 @@ export const disconnectHandler = handler(async () => {
     }
 );
 
-export async function gameBroadcast(event, gameId, result, dataType){
+export async function gameBroadcast(event, gameId, dynamoDbCall, dataType, confirmSuccess = false, confirmFailure = false, replyBackData ={}){
+    const apigwManagementApi = getConfiguredApigwManagementApi(event);
+    const connectionId = event.requestContext.connectionId;
+
+    let result;
+    try {
+        result = await dynamoDbCall();
+        console.log(`result: ${JSON.stringify(result)}`);
+    }
+    catch (e){
+        console.log(`e:${JSON.stringify(e)}`);
+        if(confirmFailure){
+            console.log("confirms failure");
+            return await replyBack(apigwManagementApi, connectionId, {type: `${MESSAGE_TYPE.NEW_PLAYER}_FAILURE`, err: e.code, ...replyBackData});
+        }
+    }
+
     if(result && result.Attributes) {
+        console.log("results");
+
+        if(confirmSuccess){
+            console.log("confirms success");
+            await replyBack(apigwManagementApi, connectionId, {type: `${MESSAGE_TYPE.NEW_PLAYER}_SUCCESS`, ...replyBackData});
+        }
         const dataToSend = {type: dataType, game: result.Attributes};
         console.log("Broadcast change to users");
-        await broadcast(event, gameId, result.Attributes.connectionIds, dataToSend);
+        await broadcast(apigwManagementApi, gameId, result.Attributes.connectionIds, dataToSend);
     }
+
+
 }
 
-export async function broadcast(event, gameId, connectionIds, dataToSend){
-    const endpoint =
-        event.requestContext.domainName + '/' + event.requestContext.stage;
-    const apigwManagementApi = new AWS.ApiGatewayManagementApi({
-        apiVersion: '2018-11-29', //TODO check which date ,
-        endpoint: endpoint
-    });
+export async function replyBack(apigwManagementApi, connectionId, dataToSend){
+    return await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(dataToSend) }).promise();
+}
+
+export async function broadcast(apigwManagementApi, gameId, connectionIds, dataToSend){
     const connectionsToDelete = await sendToClients(apigwManagementApi, connectionIds, dataToSend);
     await deleteStaleConnections(gameId, connectionsToDelete);
     return { statusCode: 200, body: 'Data sent.' };
 }
 
+export function getConfiguredApigwManagementApi(event){
+    const endpoint =
+        event.requestContext.domainName + '/' + event.requestContext.stage;
+    return new AWS.ApiGatewayManagementApi({
+        apiVersion: '2018-11-29', //TODO check which date ,
+        endpoint: endpoint
+    });
+}
 async function deleteStaleConnections(gameId, connectionsToDelete){
     const params = {
         TableName: process.env.tableName,

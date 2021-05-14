@@ -17,9 +17,7 @@ export const main = handler(async (event) => {
             ConditionExpression: 'turnNumber = :turnNo',
         ReturnValues:"ALL_NEW"
         };
-    const result = await dynamoDb.update(params);
-    await gameBroadcast(event, data.gameId, result, MESSAGE_TYPE.END_OF_TURN);
-
-    return result;
-    }
+    const dynamoDbCall = async() => await dynamoDb.update(params);
+    await gameBroadcast(event, data.gameId, dynamoDbCall, MESSAGE_TYPE.END_OF_TURN);
+ }
 );

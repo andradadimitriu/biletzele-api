@@ -21,9 +21,7 @@ export const main = handler(async (event) => {
             ConditionExpression: `rounds[${data.roundNo - 1}].roundNo = :roundNo AND rounds[${data.roundNo - 1}].roundStatus = :roundStatus AND size(rounds[${data.roundNo - 1}].wordsLeft) = :zero AND turnNumber = :turnNo`,
             ReturnValues:"ALL_NEW"
         };
-    const result = await dynamoDb.update(params);
-    console.log(`result: ${JSON.stringify(result)}`);
-    await gameBroadcast(event, data.gameId, result, MESSAGE_TYPE.END_OF_ROUND);
-    return result;
+    const dinamoDbCall = async() => await dynamoDb.update(params);
+    await gameBroadcast(event, data.gameId, dinamoDbCall, MESSAGE_TYPE.END_OF_ROUND);
     }
 );
