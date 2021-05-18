@@ -3,7 +3,6 @@ import dynamoDb from "./libs/dynamodb-lib";
 import {IDENTIFIERS} from "./libs/identifiers";
 import AWS from "aws-sdk";
 import {GAME_STATUS} from "./utils/statuses";
-import {MESSAGE_TYPE} from "./utils/messageTypes";
 
 export const enterRoom = handler(async (event) => {
     const connectionId = event.requestContext.connectionId;
@@ -38,10 +37,9 @@ export const disconnectHandler = handler(async () => {
     }
 );
 
-export async function gameBroadcast(event, gameId, dynamoDbCall, dataType, confirmSuccess = false, confirmFailure = false, replyBackData ={}){
+export async function gameBroadcast(event, gameId, dynamoDbCall, dataType, confirmSuccess = false, confirmFailure = false, getDataToSend = undefined, replyBackData = {}){
     const apigwManagementApi = getConfiguredApigwManagementApi(event);
     const connectionId = event.requestContext.connectionId;
-
     let result;
     try {
         result = await dynamoDbCall();
@@ -51,7 +49,7 @@ export async function gameBroadcast(event, gameId, dynamoDbCall, dataType, confi
         console.log(`e:${JSON.stringify(e)}`);
         if(confirmFailure){
             console.log("confirms failure");
-            return await replyBack(apigwManagementApi, connectionId, {type: `${MESSAGE_TYPE.NEW_PLAYER}_FAILURE`, err: e.code, ...replyBackData});
+            return await replyBack(apigwManagementApi, connectionId, {type: `${dataType}_FAILURE`, err: e.code, ...replyBackData});
         }
     }
 
@@ -60,11 +58,10 @@ export async function gameBroadcast(event, gameId, dynamoDbCall, dataType, confi
 
         if(confirmSuccess){
             console.log("confirms success");
-            await replyBack(apigwManagementApi, connectionId, {type: `${MESSAGE_TYPE.NEW_PLAYER}_SUCCESS`, ...replyBackData});
+            await replyBack(apigwManagementApi, connectionId, {type: `${dataType}_SUCCESS`, ...replyBackData});
         }
-        const dataToSend = {type: dataType, game: result.Attributes};
         console.log("Broadcast change to users");
-        await broadcast(apigwManagementApi, gameId, result.Attributes.connectionIds, dataToSend);
+        await broadcast(apigwManagementApi, gameId, result.Attributes.connectionIds, getDataToSend ? {type: dataType, ...getDataToSend(result.Attributes)} : {type: dataType, ...{game: result.Attributes}});
     }
 
 
@@ -105,9 +102,10 @@ async function sendToClients(apigwManagementApi, connectionIds, dataToSend){
     console.log(`connectionIds: ${JSON.stringify(connectionIds)}`);
 
     const connectionsToDelete = [];
+    console.log(`connection 0:${connectionIds.values[0]}`);
+    console.log(`length:${connectionIds.values[0].length}`);
     if( connectionIds.values[0].length < 1 ){
-        connectionIds.values.shift();
-
+        connectionsToDelete.push(connectionIds.values.shift());
     }
     const postRequests = connectionIds.values.map(async (connectionId) => {
         try {

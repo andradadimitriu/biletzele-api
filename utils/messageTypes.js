@@ -1,4 +1,5 @@
 export const MESSAGE_TYPE = {
+    NEXT_WORD: "NEXT_WORD",
     NEW_PLAYER: "NEW_PLAYER",
     END_OF_TURN: "END_OF_TURN",
     END_OF_ROUND: "END_OF_ROUND",

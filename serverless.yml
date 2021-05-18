@@ -95,14 +95,6 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
-  next_word_to_guess:
-    handler: next_word_to_guess.main
-    events:
-      - http:
-          path: biletzele/wordtoguess/{id}
-          method: post
-          cors: true
-          authorizer: aws_iam
   delete_game:
     handler: delete_game.main
     events:
@@ -151,6 +143,11 @@ functions:
     events:
       - websocket:
           route: newround
+  next_word_to_guess:
+    handler: next_word_to_guess.main
+    events:
+      - websocket:
+            route: wordtoguess
 
 # Create our resources with separate CloudFormation templates
 resources:
