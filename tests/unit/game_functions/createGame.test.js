@@ -1,4 +1,4 @@
-import {main} from '../../game_functions/create_game.js';
+import {main} from '../../../game_functions/create_game.js';
 const aws = require('aws-sdk');
 
 const event1 = {
