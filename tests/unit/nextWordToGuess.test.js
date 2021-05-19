@@ -1,4 +1,4 @@
-import {main} from '../../next_word_to_guess.js';
+import {main} from '../../game_functions/next_word_to_guess.js';
 const aws = require('aws-sdk');
 const expectedUpdateParams = {
     TableName: "testGameTableName",
@@ -34,7 +34,7 @@ const event1 = {
 }
 
 jest.mock('aws-sdk', () => {
-    const mDocumentClient = { update: jest.fn((params)=> {console.log(params); return {promise: jest.fn(()=>undefined)}})};
+    const mDocumentClient = { update: jest.fn(()=> ({promise: jest.fn(()=>undefined)}))};
     const mDynamoDB = { DocumentClient: jest.fn(() => mDocumentClient) };
     const postToCon = {postToConnection: jest.fn(() => undefined)};
     return { DynamoDB: mDynamoDB, ApiGatewayManagementApi: jest.fn(() => postToCon)};

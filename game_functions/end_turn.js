@@ -1,7 +1,7 @@
-import {IDENTIFIERS} from "./libs/identifiers";
-import dynamoDb from "./libs/dynamodb-lib";
-import handler from "./libs/handler-lib";
-import {MESSAGE_TYPE} from "./utils/messageTypes";
+import {IDENTIFIERS} from "../libs/identifiers";
+import dynamoDb from "../libs/dynamodb-lib";
+import handler from "../libs/handler-lib";
+import {MESSAGE_TYPE} from "../utils/messageTypes";
 import {gameBroadcast} from "./connection";
 export const main = handler(async (event) => {
     const data = JSON.parse(event.body).data;

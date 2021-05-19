@@ -56,7 +56,7 @@ functions:
   #     domain api call
   # - authorizer: authenticate using the AWS IAM role
   create_game:
-    handler: create_game.main
+    handler: game_functions/create_game.main
     events:
       - http:
           path: biletzele/create
@@ -64,7 +64,7 @@ functions:
           cors: true
           authorizer: aws_iam
   get_games_by_status:
-    handler: get_games_by_status.main
+    handler: game_functions/get_games_by_status.main
     events:
       - http:
           path: biletzele/getgames/{status}
@@ -72,7 +72,7 @@ functions:
           cors: true
           authorizer: aws_iam
   get_game:
-    handler: get_game.main
+    handler: game_functions/get_game.main
     events:
       - http:
           path: biletzele/getgame/{id}
@@ -80,7 +80,7 @@ functions:
           cors: true
           authorizer: aws_iam
   start_game:
-    handler: start_game.main
+    handler: game_functions/start_game.main
     events:
       - http:
           path: biletzele/startgame/{id}
@@ -88,7 +88,7 @@ functions:
           cors: true
           authorizer: aws_iam
   new_turn:
-    handler: new_turn.main
+    handler: game_functions/new_turn.main
     events:
       - http:
           path: biletzele/newturn/{id}
@@ -96,7 +96,7 @@ functions:
           cors: true
           authorizer: aws_iam
   delete_game:
-    handler: delete_game.main
+    handler: game_functions/delete_game.main
     events:
       - http:
           path: biletzele/deleteone/{id}
@@ -104,47 +104,47 @@ functions:
           cors: true
           authorizer: aws_iam
   socketConnect:
-    handler: connection.connectHandler
+    handler: game_functions/connection.connectHandler
     events:
       - websocket:
           route: $connect
   socketDisconnect:
-    handler: connection.disconnectHandler
+    handler: game_functions/connection.disconnectHandler
     events:
       - websocket:
           route: $disconnect
   enterRoom:
-    handler: connection.enterRoom
+    handler: game_functions/connection.enterRoom
     events:
       - websocket:
           route: enterroom
   add_player_to_game:
-    handler: add_player_to_game.main
+    handler: game_functions/add_player_to_game.main
     events:
       - websocket:
           route: addplayer
   end_turn:
-    handler: end_turn.main
+    handler: game_functions/end_turn.main
     events:
       - websocket:
           route: endturn
   end_round:
-    handler: end_round.main
+    handler: game_functions/end_round.main
     events:
       - websocket:
           route: endround
   end_game:
-    handler: end_game.main
+    handler: game_functions/end_game.main
     events:
       - websocket:
           route: endgame
   new_round:
-    handler: new_round.main
+    handler: game_functions/new_round.main
     events:
       - websocket:
           route: newround
   next_word_to_guess:
-    handler: next_word_to_guess.main
+    handler: game_functions/next_word_to_guess.main
     events:
       - websocket:
             route: wordtoguess

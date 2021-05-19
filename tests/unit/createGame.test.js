@@ -1,4 +1,4 @@
-import {main} from '../../create_game.js';
+import {main} from '../../game_functions/create_game.js';
 const aws = require('aws-sdk');
 
 const event1 = {
@@ -26,7 +26,7 @@ describe('create game', () => {
         jest.resetAllMocks();
     });
     it('successfully create', async () => {
-        mDynamoDb.put.mockImplementationOnce((_, callback) => callback(null, null));
+        mDynamoDb.put.mockImplementationOnce(()=>({promise: jest.fn()}));
         await main(event1);
         expect(mDynamoDb.put).toHaveBeenCalledTimes(1);
     });

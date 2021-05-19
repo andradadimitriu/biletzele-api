@@ -1,7 +1,7 @@
-import {IDENTIFIERS} from "./libs/identifiers";
-import dynamoDb from "./libs/dynamodb-lib";
-import handler from "./libs/handler-lib";
-import {GAME_STATUS} from "./utils/statuses";
+import {IDENTIFIERS} from "../libs/identifiers";
+import dynamoDb from "../libs/dynamodb-lib";
+import handler from "../libs/handler-lib";
+import {GAME_STATUS} from "../utils/statuses";
 export const main = handler(async (event) => {
     const params = {
         TableName: process.env.tableName,

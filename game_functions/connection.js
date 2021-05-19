@@ -1,8 +1,8 @@
-import handler from "./libs/handler-lib";
-import dynamoDb from "./libs/dynamodb-lib";
-import {IDENTIFIERS} from "./libs/identifiers";
+import handler from "../libs/handler-lib";
+import dynamoDb from "../libs/dynamodb-lib";
+import {IDENTIFIERS} from "../libs/identifiers";
 import AWS from "aws-sdk";
-import {GAME_STATUS} from "./utils/statuses";
+import {GAME_STATUS} from "../utils/statuses";
 
 export const enterRoom = handler(async (event) => {
     const connectionId = event.requestContext.connectionId;
