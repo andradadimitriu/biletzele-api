@@ -3,7 +3,6 @@ import handler from "../libs/handler-lib";
 
 const ASCII_LIMITS = {start: "A".charCodeAt(), end: "Z".charCodeAt()};
 const CODE_NO_CHARS = 4;
-const ROUND_NO = 4;
 import dynamoDb from "../libs/dynamodb-lib";
 import {GAME_STATUS} from "../utils/statuses";
 
@@ -22,9 +21,10 @@ export const main = handler(async (event) => {
             gameId: gameId,
             gameName: data.gameName,
             gameType: IDENTIFIERS.GAME_TYPE_BILETZELE,
-            noRounds: 4,
-            rounds: Array.from({length: ROUND_NO}, (_, index) => ({
+            noRounds: data.rounds.length,
+            rounds: data.rounds.map((roundType, index) => ({
                 roundNo: index + 1,
+                roundType,
                 roundStatus: GAME_STATUS.PENDING,
                 score: {
                     [data.team1Name]: 0,
