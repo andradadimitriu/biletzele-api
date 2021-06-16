@@ -18,6 +18,6 @@ export const main = handler(async (event) => {
         ReturnValues:"ALL_NEW"
         };
     const dynamoDbCall = async() => await dynamoDb.update(params);
-    await gameBroadcast(event, data.gameId, dynamoDbCall, MESSAGE_TYPE.END_OF_TURN);
+    await gameBroadcast(event, data.gameId, dynamoDbCall, MESSAGE_TYPE.END_OF_TURN, true, true);
  }
 );
