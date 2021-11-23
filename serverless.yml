@@ -148,7 +148,11 @@ functions:
     events:
       - websocket:
             route: wordtoguess
-
+  player_ready:
+    handler: game_functions/player_ready.main
+    events:
+      - websocket:
+          route: playerready
 # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
