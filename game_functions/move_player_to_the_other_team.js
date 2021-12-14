@@ -31,11 +31,7 @@ export const main = handler(async (event) => {
             `gameStatus = :gameStatus AND contains(players.ids, :playerId)`,
         ReturnValues: "ALL_NEW",
     };
-    console.log("before update");
-    console.log(GAME_STATUS.PENDING);
-    console.log(params);
     const dynamoDbCall = async () => await dynamoDb.update(params);
-    console.log("after update");
     return await gameBroadcast(
         event,
         data.gameId,
