@@ -6,7 +6,7 @@ const event1 = {
         gameName: "Game 1",
         team1Name: "Team1",
         team2Name: "Team2",
-
+        rounds:["DESCRIBE","MIME","WORD","SOUNDS"]
     }),
     requestContext: {
         identity:

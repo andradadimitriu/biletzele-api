@@ -38,10 +38,10 @@ export const main = handler(async (event) => {
             },
             teams: {
                 [data.team1Name]: {
-                    members: []
+                    members: {}
                 },
                 [data.team2Name]: {
-                    members: []
+                    members: {}
                 }
             },
             turnNumber: 0,

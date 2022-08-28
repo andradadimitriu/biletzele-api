@@ -148,8 +148,18 @@ functions:
     events:
       - websocket:
             route: wordtoguess
+  player_ready:
+    handler: game_functions/player_ready.main
+    events:
+      - websocket:
+          route: playerready
 
-# Create our resources with separate CloudFormation templates
+  switch_team:
+    handler: game_functions/move_player_to_the_other_team.main
+    events:
+      - websocket:
+          route: switchteam
+  # Create our resources with separate CloudFormation templates
 resources:
   # API Gateway Errors
   - ${file(resources/api-gateway-errors.yml)}
